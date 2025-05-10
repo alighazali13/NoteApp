@@ -1,4 +1,3 @@
-import { data } from "react-router-dom";
 import Input from "../../../../components/ui/input";
 import { HiLockClosed, HiMail, HiUser } from "react-icons/hi";
 import Button from "../../../../components/ui/button";
@@ -7,6 +6,9 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../../../../components/ui/form";
 import Alert from "../../../../components/ui/alert";
+import { apiSignUp } from "../../../../services/AuthService";
+import { useState } from "react";
+
 
 const SignUpSchema = z
     .object({
@@ -15,7 +17,7 @@ const SignUpSchema = z
             .email({ message: "invalid email" }),
         username: z
             .string({ required_error: "you must enter username" })
-            .min(4, { message: "username need 4 character(s) ." }),
+            .min(3, { message: "username need 3 character(s) ." }),
         password: z
             .string({ required_error: "password required !" })
             .min(8, { message: "password need 8 character(s) ." }),
@@ -31,6 +33,7 @@ const SignUpSchema = z
 type FormFields = z.infer<typeof SignUpSchema>;
 
 function SignUpForm() {
+    const [msgType, setMsgType] = useState<"success" | "error">("success");
     const {
         register,
         handleSubmit,
@@ -43,13 +46,22 @@ function SignUpForm() {
 
     const onSubmit: SubmitHandler<FormFields> = async (data) => {
         try {
-            await new Promise((resolver) => setTimeout(resolver, 1000));
-            console.log(data);
-            throw new Error();
-        } catch (error) {
+            const result = await apiSignUp(data);
+            setMsgType("success");
             setError("root", {
-                message: "username is already taken",
+                message: result.data.msg,
             });
+        } catch (error: any) {
+            setMsgType("error");
+            if (error.response && error.response.data) {
+                setError("root", {
+                    message: error.response.data.msg,
+                });
+            } else {
+                setError("root", {
+                    message: "Something went wrong! Try again.",
+                });
+            }
         }
     };
 
@@ -69,7 +81,7 @@ function SignUpForm() {
                     <Alert variant="error" message={errors.passwordConfirm.message} />
                 )}
                 {errors.root && (
-                    <Alert variant="error" message={errors.root.message} />
+                    <Alert variant={msgType} message={errors.root.message} />
                 )}
             </div>
             <Form
