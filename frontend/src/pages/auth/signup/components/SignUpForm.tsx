@@ -8,6 +8,7 @@ import { Form } from "../../../../components/ui/form";
 import Alert from "../../../../components/ui/alert";
 import { apiSignUp } from "../../../../services/AuthService";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 const SignUpSchema = z
@@ -43,6 +44,7 @@ function SignUpForm() {
         defaultValues: {},
         resolver: zodResolver(SignUpSchema),
     });
+    const navigate = useNavigate()
 
     const onSubmit: SubmitHandler<FormFields> = async (data) => {
         try {
@@ -51,6 +53,10 @@ function SignUpForm() {
             setError("root", {
                 message: result.data.msg,
             });
+            setTimeout(() => {
+                navigate("/signin");
+            }, 1000)
+            
         } catch (error: any) {
             setMsgType("error");
             if (error.response && error.response.data) {

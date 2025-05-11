@@ -1,5 +1,5 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { data } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "../../../../components/ui/input";
@@ -8,19 +8,23 @@ import SwitchLink from "../../../../components/ui/switchlink";
 import Button from "../../../../components/ui/button";
 import { Form } from "../../../../components/ui/form";
 import Alert from "../../../../components/ui/alert";
+import { apiSignIn } from "../../../../services/AuthService";
+import { useState } from "react";
+import type { TToken } from "../../../../@types/auth";
 
 const SignInSchema = z.object({
-    email: z
-        .string({ required_error: "لطفا ایمیل خود را وارد کنید" })
-        .email({ message: "email required !" }),
+    username: z
+        .string({ required_error: "Username required !" })
+        .min(3,{ message: "Username need 3 character(s) ." }),
     password: z
-        .string({ required_error: "لطفا رمز عبور خود را وارد کنید" })
-        .min(8, { message: "password need 8 character(s) ." }),
+        .string({ required_error: "Password required !" })
+        .min(8, { message: "Password need 8 character(s) ." }),
 });
 
 type FormFields = z.infer<typeof SignInSchema>;
 
 function SignInForm() {
+    const [msgType, setMsgType] = useState<"success" | "error">("success");
     const {
         register,
         handleSubmit,
@@ -30,30 +34,47 @@ function SignInForm() {
         defaultValues: {},
         resolver: zodResolver(SignInSchema),
     });
+    const navigate = useNavigate()
 
     const onSubmit: SubmitHandler<FormFields> = async (data) => {
         try {
-            await new Promise((resolver) => setTimeout(resolver, 1000));
-            console.log(data);
-            throw new Error();
-        } catch (error) {
+            const result = await apiSignIn(data);
+            const {accessToken, refreshToken} :TToken = result.data.token;
+            localStorage.setItem("accessToken", accessToken)
+            localStorage.setItem("refreshToken", refreshToken)
+            setMsgType("success")
             setError("root", {
-                message: "email is already taken!",
+                message: result.data.msg
             });
+            setTimeout(() => {
+                navigate("/notes");
+            }, 1000)
+
+        } catch (error : any) {
+           setMsgType("error")
+           if (error.response && error.response.data) {
+                setError("root", {
+                    message: error.response.data.msg,
+                });
+           }else {
+                setError("root",{
+                    message: "Something went wrong! Try again."
+                })
+           }
         }
     };
 
     return (
         <>
             <div className="absolute top-3 flex flex-col w-full gap-1">
-                {errors.email && (
-                    <Alert variant="error" message={errors.email.message} />
+                {errors.username && (
+                    <Alert variant="error" message={errors.username.message} />
                 )}
                 {errors.password && (
                     <Alert variant="error" message={errors.password.message} />
                 )}
                 {errors.root && (
-                    <Alert variant="error" message={errors.root.message} />
+                    <Alert variant={msgType} message={errors.root.message} />
                 )}
             </div>
             <Form onSubmit={handleSubmit(onSubmit)}>
@@ -63,7 +84,7 @@ function SignInForm() {
                     id="username"
                     type="text"
                     autoComplete="off"
-                    {...register("email")}
+                    {...register("username")}
                 />
 
                 <Input
