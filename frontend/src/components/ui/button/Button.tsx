@@ -19,11 +19,11 @@ function Button({
     wrapperProps,
     ...props
 }: TButtonProps) {
-    const defaultInputClassNames = "";
+    const defaultClassNames = "";
 
-    const mergedInputClassName = onlyMyClassNames
-        ? className ?? defaultInputClassNames
-        : `${defaultInputClassNames} ${className ?? ""}`;
+    const mergedClassName = onlyMyClassNames
+        ? className ?? defaultClassNames
+        : `${defaultClassNames} ${className ?? ""}`;
 
     const defaultWrapperClassName =
         "flex h-[3rem] w-full rounded-3xl items-center justify-center mt-6 bg-[#698b6a] text-white";
@@ -45,7 +45,7 @@ function Button({
                     className: mergedWrapperClassName,
                 })}
             >
-                <button className={mergedInputClassName} {...props}>
+                <button className={mergedClassName} {...props}>
                     {text}
                 </button>
             </div>
