@@ -3,6 +3,7 @@ import SignUp from "./pages/auth/signup/SignUp"
 import SignIn from "./pages/auth/Signin"
 import AuthEntry from "./pages/auth/authentry"
 import NoteStation from "./pages/notestation"
+import Note from "./pages/note"
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
       <Route path="/signin" element={<SignIn />} />
       
       <Route path="/notes" element={<NoteStation />} />
+      <Route path="/note/add" element={<Note />} />
     </Routes>
     </>
   )

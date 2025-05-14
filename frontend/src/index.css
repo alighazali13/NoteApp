@@ -4,12 +4,14 @@
     font-family: "Noto Sans", sans-serif;
     font-style: normal;
 }
-.stix{
+.stix {
     font-family: "STIX Two Text", serif;
     font-style: normal;
 }
 
-html, body, #root {
+html,
+body,
+#root {
     height: 100%;
     width: 100%;
     margin: 0;
@@ -17,16 +19,61 @@ html, body, #root {
     box-sizing: border-box;
     font-family: "Noto Sans", sans-serif;
     color: white;
-  }
+}
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: inherit;
 }
 
-.grid-row-20{
+.grid-row-20 {
     grid-template-rows: repeat(20, minmax(0, 1fr));
 }
 
-.row-start-17{
+.row-start-17 {
     grid-row-start: 17;
+}
+
+/* animations */
+@keyframes screenFadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.screen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #252525;
+    animation: screenFadeIn 1s ease-in forwards; /* فقط فید-این */
+    z-index: 30;
+    pointer-events: none;
+}
+
+@keyframes screenFlashback {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.screen-flashback {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #252525;
+    animation: screenFlashback 1.5s ease-in forwards;
+    z-index: 30;
+    pointer-events: none;
 }
