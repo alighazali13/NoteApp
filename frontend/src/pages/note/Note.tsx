@@ -12,7 +12,7 @@ function Note() {
     const contentRef = useRef(null);
     const params = useParams();
     const [noteContent, setNoteContent] = useState("");
-    const [noteTitle, setnoteTitle] = useState("");
+    const [noteTitle, setNoteTitle] = useState("");
     const redirect = useRedirect();
 
     const autoResize = (el: any) => {
@@ -26,13 +26,22 @@ function Note() {
                 if (!params.id) return;
                 const result = await apiGetNoteDetails(params.id);
                 setNoteContent(result?.note);
-                setnoteTitle(result?.title);
+                setNoteTitle(result?.title);
             } catch (error) {
                 console.error("Error fetching note details");
             }
         };
         fetchNote();
     }, [params.id]);
+    
+    useEffect(() => {
+        if (titleRef.current) {
+            autoResize(titleRef.current);
+        }
+        if (contentRef.current) {
+            autoResize(contentRef.current);
+        }
+    }, [noteTitle, noteContent]);
 
     const sendData = () => {
         const data = {
@@ -56,11 +65,11 @@ function Note() {
             <MasterPage>
                 <TextArea
                     wrapper={true}
-                    className="text-4xl bg-transparent p-2"
+                    className="text-4xl bg-transparent p-2 "
                     ref={titleRef}
                     onInput={(e) => autoResize(e.target)}
                     placeholder="Title"
-                    onChange={(e) => setNoteContent(e.target.value)}
+                    onChange={(e) => setNoteTitle(e.target.value)}
                     wrapperProps={{className:"pt-[8rem] mt-2 px-2"}}
                     value={noteTitle}
                 />
