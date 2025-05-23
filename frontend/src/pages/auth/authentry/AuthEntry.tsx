@@ -25,6 +25,7 @@ function AuthEntry() {
                 <div className="flex flex-col justify-center items-center h-[18rem] max-w-[20rem] w-full">
                     <Link className="w-full" to='/signin'>
                         <Button
+                            wrapper={true}
                             text="Sign in"
                             wrapperProps={{
                                 className: "bg-[#778977]",
@@ -33,6 +34,7 @@ function AuthEntry() {
                     </Link>
                     <Link className="w-full"  to='/signup'>
                         <Button
+                            wrapper={true}
                             text="Create account"
                             wrapperProps={{
                                 className: "bg-transparent",

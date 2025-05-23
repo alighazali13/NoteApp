@@ -1,18 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FaCheck } from "react-icons/fa";
-import { useParams } from "react-router-dom";
-import { apiGetNoteDetails, apiUpdateNote } from "../../services/NoteService";
+import { apiCreateNote } from "../../services/NoteService";
 import MasterPage from "../../components/layout/masterPage";
-import { useRedirect } from "../../utils/func/navigate/redirect";
-import TextArea from "../../components/ui/textarea";
 import Button from "../../components/ui/button";
+import TextArea from "../../components/ui/textarea";
+import { useRedirect } from "../../utils/func/navigate/redirect";
+import { handleNoteColor } from "../../utils/func/note/randomizeColor";
 
-function Note() {
+function AddNote() {
     const titleRef = useRef(null);
     const contentRef = useRef(null);
-    const params = useParams();
-    const [noteContent, setNoteContent] = useState("");
-    const [noteTitle, setnoteTitle] = useState("");
+    const [noteContent, setNoteContent] = useState<string>("");
+    const [noteTitle, setNoteTitle] = useState<string>("");
     const redirect = useRedirect();
 
     const autoResize = (el: any) => {
@@ -20,35 +19,21 @@ function Note() {
         el.style.height = el.scrollHeight + "px"; // set to scroll height
     };
 
-    useEffect(() => {
-        const fetchNote = async () => {
-            try {
-                if (!params.id) return;
-                const result = await apiGetNoteDetails(params.id);
-                setNoteContent(result?.note);
-                setnoteTitle(result?.title);
-            } catch (error) {
-                console.error("Error fetching note details");
-            }
-        };
-        fetchNote();
-    }, [params.id]);
-
     const sendData = () => {
         const data = {
-            id: params.id,
             title: noteTitle,
             note: noteContent,
+            color: handleNoteColor(),
         };
-        const updateNote = async () => {
+        const addNote = async () => {
             try {
-                await apiUpdateNote(data);
+                await apiCreateNote(data);
             } catch (error) {
-                console.error(`Error updating note ${params.id}`);
+                console.error(`Error adding new note`);
             }
         };
-        updateNote();
-        redirect({address:'/notes'})
+        addNote();
+        redirect({address:'/notes'});
     };
 
     return (
@@ -60,9 +45,8 @@ function Note() {
                     ref={titleRef}
                     onInput={(e) => autoResize(e.target)}
                     placeholder="Title"
-                    onChange={(e) => setNoteContent(e.target.value)}
+                    onChange={(e) => setNoteTitle(e.target.value)}
                     wrapperProps={{className:"pt-[8rem] mt-2 px-2"}}
-                    value={noteTitle}
                 />
                 <TextArea
                     wrapper={true}
@@ -72,7 +56,6 @@ function Note() {
                     placeholder="Type something ..."
                     onChange={(e) => setNoteContent(e.target.value)}
                     wrapperProps={{className:"pt-2 px-2 overflow-y-auto flex-1"}}
-                    value={noteContent}
                 />
                 <Button
                     wrapper={false}
@@ -87,4 +70,4 @@ function Note() {
     );
 }
 
-export default Note;
+export default AddNote;

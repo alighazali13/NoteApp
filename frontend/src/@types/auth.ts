@@ -1,6 +1,6 @@
 export type TToken = {
-    refreshToken: string;
-    accessToken: string;
+    accessToken: string | null;
+    refreshToken: string | null;
 };
 
 export type TAccount = {

@@ -1,4 +1,4 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 type TWrapperProps = ComponentProps<"div"> & {
     onlyMyClassNames?: boolean;
@@ -6,10 +6,12 @@ type TWrapperProps = ComponentProps<"div"> & {
 };
 
 type TButtonProps = ComponentProps<"button"> & {
-    text: string;
+    text?: string;
     onlyMyClassNames?: boolean;
     className?: string;
     wrapperProps?: TWrapperProps;
+    icon?: ReactNode;
+    wrapper: boolean;
 };
 
 function Button({
@@ -17,6 +19,8 @@ function Button({
     onlyMyClassNames,
     className,
     wrapperProps,
+    wrapper,
+    icon,
     ...props
 }: TButtonProps) {
     const defaultClassNames = "";
@@ -36,21 +40,33 @@ function Button({
         ? wrapperClassName ?? defaultWrapperClassName
         : `${defaultWrapperClassName} ${wrapperClassName ?? ""}`;
 
-    return (
-        <>
-            <div
-                className={mergedWrapperClassName}
-                {...(wrapperProps && {
-                    ...wrapperProps,
-                    className: mergedWrapperClassName,
-                })}
-            >
+    if (wrapper === false) {
+        return (
+            <>
                 <button className={mergedClassName} {...props}>
                     {text}
+                    {icon}
                 </button>
-            </div>
-        </>
-    );
+            </>
+        );
+    } else if (wrapper === true) {
+        return (
+            <>
+                <div
+                    className={mergedWrapperClassName}
+                    {...(wrapperProps && {
+                        ...wrapperProps,
+                        className: mergedWrapperClassName,
+                    })}
+                >
+                    <button className={mergedClassName} {...props}>
+                        {text}
+                        {icon}
+                    </button>
+                </div>
+            </>
+        );
+    }
 }
 
 export default Button;

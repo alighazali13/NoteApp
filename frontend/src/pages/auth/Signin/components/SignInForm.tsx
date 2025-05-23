@@ -1,5 +1,4 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { data, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "../../../../components/ui/input";
@@ -11,6 +10,7 @@ import Alert from "../../../../components/ui/alert";
 import { apiSignIn } from "../../../../services/AuthService";
 import { useState } from "react";
 import type { TToken } from "../../../../@types/auth";
+import { useRedirect } from "../../../../utils/func/navigate/redirect";
 
 const SignInSchema = z.object({
     username: z
@@ -34,7 +34,7 @@ function SignInForm() {
         defaultValues: {},
         resolver: zodResolver(SignInSchema),
     });
-    const navigate = useNavigate()
+    const redirect = useRedirect();
 
     const onSubmit: SubmitHandler<FormFields> = async (data) => {
         try {
@@ -46,9 +46,9 @@ function SignInForm() {
             setError("root", {
                 message: result.data.msg
             });
-            setTimeout(() => {
-                navigate("/notes");
-            }, 1000)
+
+            redirect({sec:1000, address:'/notes'})
+            
 
         } catch (error : any) {
            setMsgType("error")
@@ -103,6 +103,7 @@ function SignInForm() {
                     addressText="Forget password?"
                 />
                 <Button
+                    wrapper={true}
                     text={isSubmitting ? "Loading..." : "Sign in"}
                     type="submit"
                     disabled={isSubmitting}

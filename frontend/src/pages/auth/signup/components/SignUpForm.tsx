@@ -8,8 +8,7 @@ import { Form } from "../../../../components/ui/form";
 import Alert from "../../../../components/ui/alert";
 import { apiSignUp } from "../../../../services/AuthService";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { useRedirect } from "../../../../utils/func/navigate/redirect";
 
 const SignUpSchema = z
     .object({
@@ -44,7 +43,7 @@ function SignUpForm() {
         defaultValues: {},
         resolver: zodResolver(SignUpSchema),
     });
-    const navigate = useNavigate()
+    const redirect = useRedirect();
 
     const onSubmit: SubmitHandler<FormFields> = async (data) => {
         try {
@@ -53,9 +52,7 @@ function SignUpForm() {
             setError("root", {
                 message: result.data.msg,
             });
-            setTimeout(() => {
-                navigate("/signin");
-            }, 1000)
+            redirect({sec:1000, address:'/signin'})
             
         } catch (error: any) {
             setMsgType("error");
@@ -84,7 +81,10 @@ function SignUpForm() {
                     <Alert variant="error" message={errors.password.message} />
                 )}
                 {errors.passwordConfirm && (
-                    <Alert variant="error" message={errors.passwordConfirm.message} />
+                    <Alert
+                        variant="error"
+                        message={errors.passwordConfirm.message}
+                    />
                 )}
                 {errors.root && (
                     <Alert variant={msgType} message={errors.root.message} />
@@ -127,6 +127,7 @@ function SignUpForm() {
                     {...register("passwordConfirm")}
                 />
                 <Button
+                    wrapper={true}
                     text={isSubmitting ? "Loading..." : "Sign up"}
                     type="submit"
                     disabled={isSubmitting}

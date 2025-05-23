@@ -1,4 +1,11 @@
 @import "tailwindcss";
+@source inline("bg-[#FFD6D6]");
+@source inline("bg-[#FFF2CC]");
+@source inline("bg-[#D4E2FF]");
+@source inline("bg-[#D6F5D6]");
+@source inline("bg-[#EBD6FF]");
+@source inline("bg-[#FFE4CC]");
+@source inline("bg-[#FFCCCC]");
 
 .noto_sans {
     font-family: "Noto Sans", sans-serif;
