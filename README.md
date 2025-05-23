@@ -1,6 +1,6 @@
 # 📝 Note Station
 
-A modern and minimal note-taking app with a sleek UI and smooth performance. Users can create, edit, and delete color-coded notes.
+A modern and minimal note-taking app with a sleek UI and smooth performance. Users can create, edit, and delete notes.
 
 ##Figma Link:
 https://www.figma.com/design/hFGfxq5pcrqtQYJgdT1Z5a/Notes-App-UI--Community-?node-id=0-1&p=f&t=UbyTVyK7s2mGtLC5-0
