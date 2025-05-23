@@ -70,6 +70,9 @@ Secure storage using Django and JWT authentication
 
 
 🖼️ Screenshots
+![notestation2](https://github.com/user-attachments/assets/1bb9cbbd-570b-410c-8366-cb296e4b5767)
+![mobileNoteapp](https://github.com/user-attachments/assets/b30302a0-8996-4c15-a9d4-5466564be395)
+
 
 
 
